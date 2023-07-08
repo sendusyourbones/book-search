@@ -34,14 +34,14 @@ const resolvers = {
             const user = await User.create({ username, email, password });
             const token = signToken(user);
 
-            return { token, profile };
+            return { token, user };
         },
 
-        saveBook: async (parent, saveBookInput, context) => {
+        saveBook: async (parent, { input }, context) => {
             if (context.user) {
-                return User.findOneAndUpdate(
+                return await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { savedBooks: saveBookInput } },
+                    { $addToSet: { savedBooks: input } },
                     {
                         new: true,
                         runValidators: true,
